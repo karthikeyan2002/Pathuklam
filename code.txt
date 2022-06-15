@@ -1,0 +1,739 @@
+DATABASE SERVICE:
+
+<!DOCTYPE html>
+<head>Database as a Service</head><br><br>
+<body>
+
+    <label>Name </label><input id="NameBox" type="text"><br><br>
+    <label>RollNo </label><input id="RollBox" type="text"><br><br>
+    <label>Section </label><input id="SecBox" type="text"><br><br>
+    <label>Gender </label>
+    <select id="genBox">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+
+    <br><br><button id="insertBtn">Insert</button>
+    <button id="selectBtn">Select</button>
+    <button id="updateBtn">Update</button>
+    <button id="deleteBtn">delete</button>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA4mRDH3sl4NA7zE7jjPEGr0VaHUZfVcZE",
+          authDomain: "databaseproj-e5ba9.firebaseapp.com",
+          projectId: "databaseproj-e5ba9",
+          storageBucket: "databaseproj-e5ba9.appspot.com",
+          messagingSenderId: "269558510720",
+          appId: "1:269558510720:web:1953bb00304bf88c7f2265"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        import {getDatabase, ref, set, get, child, update, remove} from "https://www.gstatic.com/firebasejs/9.8.3/firebase-database.js"
+
+        const db=getDatabase();
+
+        var nameId = document.getElementById("NameBox");
+        var rollId = document.getElementById("RollBox");
+        var secId = document.getElementById("SecBox");
+        var genId = document.getElementById("genBox");
+
+        var insertId = document.getElementById("insertBtn");
+        var selectId = document.getElementById("selectBtn");
+        var updateId = document.getElementById("updateBtn");
+        var deleteId = document.getElementById("deleteBtn");
+
+
+        //Insert data function
+        function insertData(){
+            set(ref(db,"StudentsDatabase/"+ rollId.value),{
+                NameOfStudent: nameId.value,
+                RollNo: rollId.value,
+                Section: secId.value,
+                Gender: genId.value 
+            })
+            .then(()=>{
+                alert("Data inserted successfully");
+            })
+            .catch((error)=>{
+                alert("unsuccessful, error occured"+error);
+            });
+        }
+
+        //select data
+        function selectData(){
+
+            const dbref=ref(db);
+            
+            get(child(dbref,"StudentsDatabase/"+ rollId.value)).then((snapshot)=>{
+                if(snapshot.exists()){
+                    nameId.value = snapshot.val().NameOfStudent;
+                    secId.value = snapshot.val().Section;
+                    genId.value=snapshot.val().Gender;
+                }
+                
+                else{
+                    alert("record not found");
+                }
+            })
+            .catch(()=>{
+                alert("Error "+error);
+            });
+        }
+
+        //Update data
+        function updateData(){
+            set(ref(db,"StudentsDatabase/"+ rollId.value),{
+                NameOfStudent: nameId.value,
+                RollNo: rollId.value,
+                Section: secId.value,
+                Gender: genId.value 
+            })
+            .then(()=>{
+                alert("Updated suceessfully");
+            })
+            .catch((error)=>{
+                alert("Error occurred "+error);
+            });
+        }
+
+        //delete data
+        function deleteData(){
+            remove(ref(db,"StudentsDatabase/"+ rollId.value))
+            .then(()=>{
+                alert("Record removed successfully");
+            })
+            .catch((error)=>{
+                alert("Error "+error);
+            })
+        }
+
+        insertId.addEventListener('click',insertData);
+        selectId.addEventListener('click',selectData);
+        updateId.addEventListener('click',updateData);
+        deleteId.addEventListener('click',deleteData);
+
+
+      </script>
+
+
+</body>
+</html>
+
+
+AUTHENTICATION SERVICE:
+
+SIGNUP:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <label>Username  </label><input type="email" id="email"><br><br>
+    
+    <label>Password  </label><input type="password" id="pass"><br><br>
+    <button id="signup">Sign up</button>
+
+    Already have an account? <button id="login" onclick="window.location.href='C:/Users/Lenovo/OneDrive/Documents/6 sem/Cloud lab/AuthenticationLogin.html'">Login</button>
+
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-auth.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyAnT_ELTmJ1FjZ8N4l0ZPl1v75XKYFFXKs",
+          authDomain: "authenticationproj-c831c.firebaseapp.com",
+          projectId: "authenticationproj-c831c",
+          storageBucket: "authenticationproj-c831c.appspot.com",
+          messagingSenderId: "31751440775",
+          appId: "1:31751440775:web:45808ef9bab7c744c4eb22"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const email = document.getElementById("email").value
+        const password = document.getElementById("pass").value
+        var signup = document.getElementById("signup");
+        
+        document.getElementById("signup").addEventListener('click',function(){
+            const email = document.getElementById("email").value
+            const password = document.getElementById("pass").value
+
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential)=>{
+
+                const user = userCredential.user;
+                alert("Signup successful");
+            })
+            .catch((error)=>{
+                alert("Error occured "+error);
+            })
+        });
+
+      </script>
+
+</body>
+</html>
+
+LOGIN:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login</h1>
+
+    <label>Username  </label><input type="email" id="email"><br><br>
+    
+    <label>Password  </label><input type="password" id="pass"><br><br>
+
+    <button id="login">Login</button>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-auth.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyAnT_ELTmJ1FjZ8N4l0ZPl1v75XKYFFXKs",
+          authDomain: "authenticationproj-c831c.firebaseapp.com",
+          projectId: "authenticationproj-c831c",
+          storageBucket: "authenticationproj-c831c.appspot.com",
+          messagingSenderId: "31751440775",
+          appId: "1:31751440775:web:45808ef9bab7c744c4eb22"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById("login").addEventListener('click',function(){
+            const email=document.getElementById("email").value
+            const password=document.getElementById("pass").value
+
+            signInWithEmailAndPassword(auth, email, password)
+            .then(()=>{
+                alert("Logged in successfully");
+            })
+            .catch((error)=>{
+                alert("Error occured "+error);
+            })
+        });
+
+      </script>
+
+</body>
+</html>
+
+STORAGE
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="inputFile" multiple>
+    <button id="upload">Upload</button><br><br>
+    <button id="download">Download</button>
+    <img src="" alt="" id="img" width="" height="">
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-storage.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyAnT_ELTmJ1FjZ8N4l0ZPl1v75XKYFFXKs",
+          authDomain: "authenticationproj-c831c.firebaseapp.com",
+          projectId: "authenticationproj-c831c",
+          storageBucket: "authenticationproj-c831c.appspot.com",
+          messagingSenderId: "31751440775",
+          appId: "1:31751440775:web:45808ef9bab7c744c4eb22"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        document.getElementById("upload").addEventListener('click',function(){
+
+            var file = document.getElementById("inputFile").files[0]
+            const storage = getStorage()
+            const storageref = ref(storage, 'Image1.jpg');
+
+            uploadBytes(storageref,file)
+            .then((snapshot)=>{
+                alert("Image uploaded");
+            })
+            .catch((error)=>{
+                alert("Error "+error);
+            })
+        });
+
+       /* document.getElementById("download").addEventListener('click',function(){
+            getDownloadURL(ref(storage,'Image1.jpg'))
+            .then((url)=>{
+                console.log(url);
+
+                const imageHolder = getElementById("img")
+                imageHolder.setAttribute('src',url);
+            })
+            .catch((error)=>{
+                alert("Error "+error);
+            })
+        }); */
+
+        document.getElementById("download").addEventListener('click',function(){
+		getDownloadURL(ref(storage, 'Image1.jpg'))
+		.then((url) => {
+            console.log(url);
+
+			const img = document.getElementById("img");
+			img.style.display = "block";
+			img.setAttribute("src", url);
+            img.setAttribute("width", 800);
+            img.setAttribute("height", 500);
+
+		})
+		.catch((error) => {
+			// Handle any errors
+			alert(error);
+		});
+	})
+	
+
+      </script>
+
+</body>
+</html>
+
+
+RESTFUL:
+
+const express = require('express');
+const app = express();
+app.use(express.json());
+const customers = [
+ { title: 'Dharshini', id:22 },
+ { title: 'Priyo', id:70 },
+ { title: 'Juhi', id: 42 }
+ ]
+ //READ Request Handlers
+app.get('/', (req, res) => {
+ res.send('Welcome to Edurekas REST API with Node.js Tutorial!!');
+});
+app.get('/api/customers', (req, res) => {
+ res.send(customers);
+});
+app.get('/api/customers/:id', (req, res) => {
+ const customer = customers.find(c => c.id === parseInt(req.params.id));
+ if (!customer) res.status(404).send(
+ '<h2 style="font-family: Malgun Gothic; color: darkred;">\Ooops... Cant find what you are looking for!</h2>');
+ res.send(customer);
+});
+//CREATE Request Handler
+app.post('/api/customers', (req, res) => {
+
+ const { error } = validatecustomer(req.body);
+ if (error) {
+ res.status(400).send(error.details[0].message)
+ return;
+ }
+ const customer = {
+ id: customers.length + 1,
+ title: req.body.title
+ };
+ customers.push(customer);
+ res.send(customer);
+});
+//UPDATE Request Handler
+app.put('/api/customers/:id', (req, res) => {
+ const customer = customers.find(c => c.id === parseInt(req.params.id));
+ if (!customer) res.status(404).send(
+ '<h2 style="font-family: Malgun Gothic; color: darkred;">Not Found!! </h2>');
+ const { error } = validatecustomer(req.body);
+ if (error) {
+ res.status(400).send(error.details[0].message);
+ return;
+ }
+ customer.title = req.body.title;
+ res.send(customer);
+});
+//DELETE Request Handler
+app.delete('/api/customers/:id', (req, res) => {
+ const customer = customers.find(c => c.id === parseInt(req.params.id));
+ if (!customer) res.status(404).send('<h2 style="font-family: Malgun Gothic; color: darkred;"> Not Found!! < /h2>');
+ const index = customers.indexOf(customer);
+ customers.splice(index, 1);
+ res.send(customer);
+});
+function validatecustomer(customer) {
+ const schema = {
+ title: Joi.string().min(3).required()
+ };
+ return Joi.validate(customer, schema);
+}
+//PORT ENVIRONMENT VARIABLE
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log('Listening on port ${port}..'));
+
+
+RMI:
+
+Create the remote interface
+Factorial.java
+import java.rmi.*;
+//Main interface file
+public interface Factorial extends Remote{
+	public int Factorial(int x)throws RemoteException;
+}
+
+Implementation of the remote interface
+Factorialremote.java
+import java.rmi.*;
+//remote file for factorial service
+import java.rmi.server.*;
+public class Factorialremote extends UnicastRemoteObject implements Factorial{
+	Factorialremote()throws RemoteException{
+		super();
+	}
+	public int Factorial(int x){
+		return x*x; //Returning to the function calls
+		}
+}
+MyClient.java
+import java.rmi.*;
+//Client file that requests server
+import java.util.Scanner;
+public class MyClient{
+	public static void main(String args[]){
+		try{
+			Scanner inp = new Scanner(System.in);
+			Factorial stub=(Factorial)Naming.lookup("rmi://172.17.17.120:1099/sonoo");
+			System.out.println("Enter the number: ");
+			int x = inp.nextInt();
+			System.out.println("Factorial of the number you entered is:125 ");
+			int arr = stub.Factorial(x); //Function for finding fact!
+			System.out.println(arr);
+		}catch(Exception e){}
+	}
+}
+MyServer.java
+import java.rmi.*; 
+//Main server file that responds to client 
+import java.rmi.registry.*; 
+public class MyServer{ 
+	public static void main(String args[]){ 
+		try{ 
+			Factorial stub=new Factorialremote(); 
+			Naming.rebind("rmi://172.17.17.120:1099/sonoo",stub); 
+		}catch(Exception e){System.out.println(e);} 
+	System.out.println("Establishing connection..."); 
+	} 
+}
+
+
+CLOUDSIM:
+
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
+ *               of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009, The University of Melbourne, Australia
+ */
+
+package org.cloudbus.cloudsim.examples;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
+import org.cloudbus.cloudsim.Datacenter;
+import org.cloudbus.cloudsim.DatacenterBroker;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
+import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.Storage;
+import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.UtilizationModelFull;
+import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.VmAllocationPolicySimple;
+import org.cloudbus.cloudsim.VmSchedulerSpaceShared;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+
+
+/**
+ * A simple example showing how to create
+ * two datacenters with one host each and
+ * run two cloudlets on them.
+ */
+public class CloudSimExample4 {
+
+	/** The cloudlet list. */
+	private static List<Cloudlet> cloudletList;
+
+	/** The vmlist. */
+	private static List<Vm> vmlist;
+
+	/**
+	 * Creates main() to run this example
+	 */
+	public static void main(String[] args) {
+
+		Log.printLine("Starting CloudSimExample4...");
+
+		try {
+			// First step: Initialize the CloudSim package. It should be called
+			// before creating any entities.
+			int num_user = 1;   // number of cloud users
+			Calendar calendar = Calendar.getInstance();
+			boolean trace_flag = false;  // mean trace events
+
+			// Initialize the GridSim library
+			CloudSim.init(num_user, calendar, trace_flag);
+
+			// Second step: Create Datacenters
+			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
+			@SuppressWarnings("unused")
+			Datacenter datacenter0 = createDatacenter("Datacenter_0");
+			@SuppressWarnings("unused")
+			Datacenter datacenter1 = createDatacenter("Datacenter_1");
+
+			//Third step: Create Broker
+			DatacenterBroker broker = createBroker();
+			int brokerId = broker.getId();
+
+			//Fourth step: Create one virtual machine
+			vmlist = new ArrayList<Vm>();
+
+			//VM description
+			int vmid = 0;
+			int mips = 250;
+			long size = 10000; //image size (MB)
+			int ram = 512; //vm memory (MB)
+			long bw = 1000;
+			int pesNumber = 1; //number of cpus
+			String vmm = "Xen"; //VMM name
+
+			//create two VMs
+			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
+			vmid++;
+			Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
+			//add the VMs to the vmList
+			vmlist.add(vm1);
+			vmlist.add(vm2);
+
+			//submit vm list to the broker
+			broker.submitVmList(vmlist);
+
+
+			//Fifth step: Create two Cloudlets
+			cloudletList = new ArrayList<Cloudlet>();
+
+			//Cloudlet properties
+			int id = 0;
+			long length = 40000;
+			long fileSize = 300;
+			long outputSize = 300;
+			UtilizationModel utilizationModel = new UtilizationModelFull();
+
+			Cloudlet cloudlet1 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+			cloudlet1.setUserId(brokerId);
+
+			id++;
+			Cloudlet cloudlet2 = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+			cloudlet2.setUserId(brokerId);
+
+			//add the cloudlets to the list
+			cloudletList.add(cloudlet1);
+			cloudletList.add(cloudlet2);
+
+			//submit cloudlet list to the broker
+			broker.submitCloudletList(cloudletList);
+
+
+			//bind the cloudlets to the vms. This way, the broker
+			// will submit the bound cloudlets only to the specific VM
+			broker.bindCloudletToVm(cloudlet1.getCloudletId(),vm1.getId());
+			broker.bindCloudletToVm(cloudlet2.getCloudletId(),vm2.getId());
+
+			// Sixth step: Starts the simulation
+			CloudSim.startSimulation();
+
+
+			// Final step: Print results when simulation is over
+			List<Cloudlet> newList = broker.getCloudletReceivedList();
+
+			CloudSim.stopSimulation();
+
+        	printCloudletList(newList);
+
+			Log.printLine("CloudSimExample4 finished!");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			Log.printLine("The simulation has been terminated due to an unexpected error");
+		}
+	}
+
+	private static Datacenter createDatacenter(String name){
+
+		// Here are the steps needed to create a PowerDatacenter:
+		// 1. We need to create a list to store
+		//    our machine
+		List<Host> hostList = new ArrayList<Host>();
+
+		// 2. A Machine contains one or more PEs or CPUs/Cores.
+		// In this example, it will have only one core.
+		List<Pe> peList = new ArrayList<Pe>();
+
+		int mips = 1000;
+
+		// 3. Create PEs and add these into a list.
+		peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+
+		//4. Create Host with its id and list of PEs and add them to the list of machines
+		int hostId=0;
+		int ram = 2048; //host memory (MB)
+		long storage = 1000000; //host storage
+		int bw = 10000;
+
+
+		//in this example, the VMAllocatonPolicy in use is SpaceShared. It means that only one VM
+		//is allowed to run on each Pe. As each Host has only one Pe, only one VM can run on each Host.
+		hostList.add(
+    			new Host(
+    				hostId,
+    				new RamProvisionerSimple(ram),
+    				new BwProvisionerSimple(bw),
+    				storage,
+    				peList,
+    				new VmSchedulerSpaceShared(peList)
+    			)
+    		); // This is our first machine
+
+		// 5. Create a DatacenterCharacteristics object that stores the
+		//    properties of a data center: architecture, OS, list of
+		//    Machines, allocation policy: time- or space-shared, time zone
+		//    and its price (G$/Pe time unit).
+		String arch = "x86";      // system architecture
+		String os = "Linux";          // operating system
+		String vmm = "Xen";
+		double time_zone = 10.0;         // time zone this resource located
+		double cost = 3.0;              // the cost of using processing in this resource
+		double costPerMem = 0.05;		// the cost of using memory in this resource
+		double costPerStorage = 0.001;	// the cost of using storage in this resource
+		double costPerBw = 0.0;			// the cost of using bw in this resource
+		LinkedList<Storage> storageList = new LinkedList<Storage>();	//we are not adding SAN devices by now
+
+	       DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
+	                arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
+
+
+		// 6. Finally, we need to create a PowerDatacenter object.
+		Datacenter datacenter = null;
+		try {
+			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return datacenter;
+	}
+
+	//We strongly encourage users to develop their own broker policies, to submit vms and cloudlets according
+	//to the specific rules of the simulated scenario
+	private static DatacenterBroker createBroker(){
+
+		DatacenterBroker broker = null;
+		try {
+			broker = new DatacenterBroker("Broker");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return broker;
+	}
+
+	/**
+	 * Prints the Cloudlet objects
+	 * @param list  list of Cloudlets
+	 */
+	private static void printCloudletList(List<Cloudlet> list) {
+		int size = list.size();
+		Cloudlet cloudlet;
+
+		String indent = "    ";
+		Log.printLine();
+		Log.printLine("========== OUTPUT ==========");
+		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
+				"Data center ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
+
+		DecimalFormat dft = new DecimalFormat("###.##");
+		for (int i = 0; i < size; i++) {
+			cloudlet = list.get(i);
+			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+
+			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS){
+				Log.print("SUCCESS");
+
+				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
+						indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime())+
+						indent + indent + dft.format(cloudlet.getFinishTime()));
+			}
+		}
+
+	}
+}
+
