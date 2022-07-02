@@ -42,3 +42,10 @@ virt-manager
 
 virsh list
 
+___IF ERROR____
+
+sudo lsof /var/lib/dpkg/lock
+sudo lsof /var/lib/apt/lists/lock
+sudo lsof /var/cache/apt/archives/lock
+
+pkill -9 process_id
