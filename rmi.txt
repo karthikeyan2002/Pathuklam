@@ -1,0 +1,67 @@
+RMI
+
+Factorial.java
+
+
+import java.rmi.*; 
+//Main interface file 
+public interface Factorial extends Remote{ 
+	public int[] Factorial(int x)throws RemoteException; 
+}
+
+Factorialremote.java
+
+import java.rmi.*; 
+//remote file for factorial service 
+import java.rmi.server.*; 
+public class Factorialremote extends UnicastRemoteObject implements Factorial{ 
+	Factorialremote()throws RemoteException{ 
+		super(); 
+	} 
+	public int[] Factorial(int x){ 
+		int array[] = new int[1000]; 
+		int i,fact=1; 
+		int number=x;//to calculate factorial 
+		for(i=1;i<=number;i++){ 
+			fact=fact*i; 
+		} 
+		array[0] = fact; 
+		return (array); //Returning to the function calls 
+		} 
+}
+
+MyClient.java
+
+import java.rmi.*; 
+//Client file that requests server 
+import java.util.Scanner; 
+public class MyClient{ 
+	public static void main(String args[]){ 
+		try{ 
+			Scanner inp = new Scanner(System.in); 
+			Factorial stub=(Factorial)Naming.lookup("rmi://172.17.17.128:5000/sonoo"); 
+			System.out.println("Enter the number: "); 
+			int x = inp.nextInt(); 
+			System.out.println("Factorial of the number you entered is: "); 
+			int arr[] = stub.Factorial(x); //Function for finding fact! 
+			for(int i=0;arr[i]!=0;i++) { 
+				System.out.println(arr[i]); //Displaying the value 
+			} 
+		}catch(Exception e){}
+	} 
+}
+
+MyServer.java
+
+import java.rmi.*; 
+//Main server file that responds to client 
+import java.rmi.registry.*; 
+public class MyServer{ 
+	public static void main(String args[]){ 
+		try{ 
+			Factorial stub=new Factorialremote(); 
+			Naming.rebind("rmi://172.17.17.127:5000/sonoo",stub); 
+		}catch(Exception e){System.out.println(e);} 
+	System.out.println("Establishing connection..."); 
+	} 
+}
